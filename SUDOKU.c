@@ -5,6 +5,10 @@ static signed int SUDOKU_element[9][3][3];
 static signed int SUDOKU_fixedElement[9][3][3] = {0};
 static int choice = 0;
 static int gameNumber = 1;
+static int sudokuPositionX;
+static int sudokuPositionY;
+static int messagePositionX;
+static int messagePositionY;
 
 void SUDOKU_initialize ()
 {
@@ -35,7 +39,11 @@ void SUDOKU_original ()
 
 void SUDOKU_set ()
 {
+
    printf ("\n");
+   c_textcolor(LIGHTMAGENTA);
+   c_gotoxy(sudokuPositionX, sudokuPositionY);
+   printf ("                                                                  SUDOKU                                                  \n\n");
 
    for (u32 rowIndex = 0; rowIndex < 3; rowIndex++)
    {
@@ -196,6 +204,9 @@ void SUDOKU_set ()
    printf ("-----+-----+-----+");
 
    printf ("\n");
+
+   messagePositionX = c_wherex ();
+   messagePositionY = c_wherey ();
 }
 
 coordinate SUDOKU_scanCoordinate ()
@@ -210,9 +221,14 @@ coordinate SUDOKU_scanCoordinate ()
             row = -1, column = -1; 
 
             SUDOKU_set ();
-
+            c_gotoxy (messagePositionX, messagePositionY+6);
+            printf ("                                                                         \n");
+            printf ("                                                                         \n");
+            printf ("                                                                         \n");
+            printf ("                                                                         \n");
+            c_gotoxy (messagePositionX, messagePositionY+6);
             c_textcolor(LIGHTCYAN);
-            printf ("\nEnter Square NO. from 1 to 9: ");
+            printf ("Enter Square NO. from 1 to 9: ");
             c_textcolor(LIGHTMAGENTA);
             scanf ("%d", &square);
         }
@@ -247,6 +263,7 @@ s32 SUDOKU_scanNumber ()
     s32 number = -1;
     while (number < 0 || number > 9)
     {
+        c_gotoxy (messagePositionX, messagePositionY+9);
         c_textcolor(LIGHTCYAN);
         printf ("Enter Number from 1 to 9: ");
         c_textcolor(LIGHTMAGENTA);
@@ -442,10 +459,18 @@ void SUDOKU_play ()
 
         coordinate desiredCoordinate = SUDOKU_scanCoordinate ();
 
+        c_gotoxy (messagePositionX, messagePositionY);
+        printf ("                                                                            \n");
+        printf ("                                                                            \n");
+        printf ("                                                                            \n");
+        printf ("                                                                            \n");
+        printf ("                                                                            \n");
+        c_gotoxy (messagePositionX, messagePositionY);
+
         while (SUDOKU_fixedElement[desiredCoordinate.square][desiredCoordinate.row][desiredCoordinate.column] != 0)
         {
             c_textcolor(RED);
-            printf ("\nit's not available space !!\n");
+            printf ("\n\n[%d, %d, %d] is not allowed space !!\n\n", desiredCoordinate.square+1, desiredCoordinate.row+1, desiredCoordinate.row+1);
             printf ("please, choose another allowed space !!\n\n");
 
             desiredCoordinate = SUDOKU_scanCoordinate ();
@@ -455,32 +480,72 @@ void SUDOKU_play ()
 
         coordinate similarCoordinate = SUDOKU_check (desiredCoordinate, number);
 
+        c_gotoxy (messagePositionX, messagePositionY);
+        printf ("                                                                            \n");
+        printf ("                                                                            \n");
+        printf ("                                                                            \n");
+        printf ("                                                                            \n");
+        printf ("                                                                            \n");
+        c_gotoxy (messagePositionX, messagePositionY);
+
         if (number == 0)
         {
             SUDOKU_element[desiredCoordinate.square][desiredCoordinate.row][desiredCoordinate.column] = number;
             SUDOKU_storeElements ();
             c_textcolor(LIGHTRED);
-            printf ("\n\n(%d, %d, %d) deleted !!\n\n", similarCoordinate.square+1, similarCoordinate.row+1, similarCoordinate.column+1);
+            printf ("\n\n[%d, %d, %d] deleted !!\n", desiredCoordinate.square+1, desiredCoordinate.row+1, desiredCoordinate.column+1);
         }
         else if (similarCoordinate.ack)
         {
             SUDOKU_element[desiredCoordinate.square][desiredCoordinate.row][desiredCoordinate.column] = number;
             SUDOKU_storeElements ();
             c_textcolor(LIGHTGREEN);
-            printf ("\nWell Done !!\n\n");
+            printf ("\n\nWell Done !!\n");
         }
         else
         {
             c_textcolor(LIGHTRED);
-            printf ("\n\nit's Exist at [%d, %d, %d] !!\n", similarCoordinate.square+1, similarCoordinate.row+1, similarCoordinate.column+1);
-            printf ("\n");
-            printf ("please, Try again !!\n\n");
+            printf ("\n\nyou can't put %d in [%d, %d, %d] !!\n", number, desiredCoordinate.square+1, desiredCoordinate.row+1, desiredCoordinate.column+1);
+            printf ("because %d is Exist at [%d, %d, %d] !!\n", number, similarCoordinate.square+1, similarCoordinate.row+1, similarCoordinate.column+1);
+            printf ("please, Try again !!\n");
         }
     }
 
+    c_gotoxy (sudokuPositionX, sudokuPositionY);
     c_textcolor(RED);
-    printf ("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                                                                    Congratulations                                  \n");
-    printf ("                                                                  Your're The Winner !!                               \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                 Congratulations                                  \n");
+    printf ("                                                               Your're The Winner !!                               \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
+    printf ("                                                                            \n");
     c_textcolor (BLACK);
 }
 
@@ -491,7 +556,11 @@ void SUDOKU ()
     while (choice != 1 && choice != 2)
     {
         c_textbackground(WHITE);
-        printf ("\n");
+        c_textcolor(LIGHTMAGENTA);
+        printf ("\n\n");
+        sudokuPositionX = c_wherex ();
+        sudokuPositionY = c_wherey ();
+        printf ("                                                                  SUDOKU                                                  \n\n");
         c_textcolor(LIGHTMAGENTA);
         printf ("1. ");
         c_textcolor(DARKGRAY);
