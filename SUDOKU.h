@@ -14,6 +14,7 @@ typedef struct{
     s32 ack;
 }coordinate;
 
+void SUDOKU_create ();
 void SUDOKU_initialize ();
 void SUDOKU_original ();
 void SUDOKU_set ();
@@ -23,5 +24,14 @@ coordinate SUDOKU_check ( coordinate desiredCoordinate, s32 number);
 s32 SUDOKU_youAreTheWinner ();
 void SUDOKU_play ();
 void SUDOKU ();
+
+void SUDOKU_storeElements ();
+void SUDOKU_initializeElements ();
+void SUDOKU_initializeElements ();
+void SUDOKU_storeFixedElements ();
+void SUDOKU_initializeFixedElements ();
+
+void SUDOKU_storePlayNumber ();
+void SUDOKU_initializePlayNumber ();
 
 #endif

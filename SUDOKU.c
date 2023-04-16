@@ -3,6 +3,8 @@
 
 static signed int SUDOKU_element[9][3][3];
 static signed int SUDOKU_fixedElement[9][3][3] = {0};
+static int choice = 0;
+static int gameNumber = 1;
 
 void SUDOKU_initialize ()
 {
@@ -33,8 +35,6 @@ void SUDOKU_original ()
 
 void SUDOKU_set ()
 {
-   c_textbackground(WHITE);
-
    printf ("\n");
 
    for (u32 rowIndex = 0; rowIndex < 3; rowIndex++)
@@ -196,38 +196,45 @@ void SUDOKU_set ()
    printf ("-----+-----+-----+");
 
    printf ("\n");
-   printf ("\n");
 }
 
 coordinate SUDOKU_scanCoordinate ()
 {
     coordinate coordinate;
     s32 square = -1, row = -1, column = -1; 
+
+    while (square < 1 || row < 1 || column < 1)
+    {
+        while (square < 1 || square > 9 || row == 0 || column == 0)
+        {
+            row = -1, column = -1; 
+
+            SUDOKU_set ();
+
+            c_textcolor(LIGHTCYAN);
+            printf ("\nEnter Square NO. from 1 to 9: ");
+            c_textcolor(LIGHTMAGENTA);
+            scanf ("%d", &square);
+        }
+
+        while ((row < 0 || row > 3) && square != 0)
+        {
+            c_textcolor(LIGHTCYAN);
+            printf ("Enter Row NO. from 1 to 3: ");
+            c_textcolor(LIGHTMAGENTA);
+            scanf ("%d", &row);
+        }
+
+        while ((column < 0 || column > 3 ) && row != 0 && square != 0)
+        {
+            c_textcolor(LIGHTCYAN);
+            printf ("Enter Column NO. from 1 to 3: ");
+            c_textcolor(LIGHTMAGENTA);
+            scanf ("%d", &column);
+        }
+
+    }
     
-    while (square < 1 || square > 9)
-    {
-        c_textcolor(LIGHTCYAN);
-        printf ("Enter Square NO. from 1 to 9: ");
-        c_textcolor(LIGHTMAGENTA);
-        scanf ("%d", &square);
-    }
-
-    while (row < 1 || row > 3)
-    {
-        c_textcolor(LIGHTCYAN);
-        printf ("Enter Row NO. from 1 to 3: ");
-        c_textcolor(LIGHTMAGENTA);
-        scanf ("%d", &row);
-    }
-
-    while (column < 1 || column > 3)
-    {
-        c_textcolor(LIGHTCYAN);
-        printf ("Enter Column NO. from 1 to 3: ");
-        c_textcolor(LIGHTMAGENTA);
-        scanf ("%d", &column);
-    }
-
     coordinate.square = square - 1;
     coordinate.row = row - 1;
     coordinate.column = column - 1;
@@ -345,7 +352,7 @@ coordinate SUDOKU_check ( coordinate desiredCoordinate, s32 number)
     //check the big Column
     if (desiredCoordinate.square == 0 || desiredCoordinate.square == 3 || desiredCoordinate.square == 6)
     {
-        for (u32 square = 0; square < 3; square+=3)
+        for (u32 square = 0; square <= 6; square+=3)
         {
             for (u32 row = 0; row < 3; row++)
             {
@@ -367,7 +374,7 @@ coordinate SUDOKU_check ( coordinate desiredCoordinate, s32 number)
     }
     else if (desiredCoordinate.square == 1 || desiredCoordinate.square == 4 || desiredCoordinate.square == 7)
     {
-        for (u32 square = 3; square < 6; square+=3)
+        for (u32 square = 1; square <= 7; square+=3)
         {
             for (u32 row = 0; row < 3; row++)
             {
@@ -389,7 +396,7 @@ coordinate SUDOKU_check ( coordinate desiredCoordinate, s32 number)
     }
     else if (desiredCoordinate.square == 2 || desiredCoordinate.square == 5 || desiredCoordinate.square == 8)
     {
-        for (u32 square = 6; square < 9; square+=3)
+        for (u32 square = 2; square <= 8; square+=3)
         {
             for (u32 row = 0; row < 3; row++)
             {
@@ -420,7 +427,7 @@ s32 SUDOKU_youAreTheWinner ()
     {
         for (u32 row = 0; row < 3; row++)
         {
-            for (u32 column = 0; column < 9; column++)
+            for (u32 column = 0; column < 3; column++)
             {
                 coordinate.square = square;
                 coordinate.row = row;
@@ -437,7 +444,7 @@ void SUDOKU_play ()
 {
     while (SUDOKU_youAreTheWinner () == 0)
     {
-        SUDOKU_set ();
+        //SUDOKU_set ();
 
         coordinate desiredCoordinate = SUDOKU_scanCoordinate ();
 
@@ -457,31 +464,235 @@ void SUDOKU_play ()
         if (number == 0)
         {
             SUDOKU_element[desiredCoordinate.square][desiredCoordinate.row][desiredCoordinate.column] = number;
+            SUDOKU_storeElements ();
             c_textcolor(LIGHTRED);
             printf ("\n\n(%d, %d, %d) deleted !!\n\n", similarCoordinate.square+1, similarCoordinate.row+1, similarCoordinate.column+1);
         }
         else if (similarCoordinate.ack)
         {
             SUDOKU_element[desiredCoordinate.square][desiredCoordinate.row][desiredCoordinate.column] = number;
+            SUDOKU_storeElements ();
             c_textcolor(LIGHTGREEN);
             printf ("\nWell Done !!\n\n");
         }
         else
         {
             c_textcolor(LIGHTRED);
-            printf ("\n\nit's Exist at (%d, %d, %d) !!\n", similarCoordinate.square+1, similarCoordinate.row+1, similarCoordinate.column+1);
+            printf ("\n\nit's Exist at [%d, %d, %d] !!\n", similarCoordinate.square+1, similarCoordinate.row+1, similarCoordinate.column+1);
             printf ("\n");
             printf ("please, Try again !!\n\n");
         }
     }
 
+    c_textcolor(LIGHTGREEN);
     printf ("                               Congratulations                                  \n");
-    printf ("                            Your're The Winner !!                               \n");
+    printf ("                             Your're The Winner !!                               \n");
 }
 
 void SUDOKU ()
 {
-    SUDOKU_initialize ();
-    SUDOKU_original ();
+    c_textbackground(WHITE);
+    printf ("\n");
+    c_textcolor(LIGHTMAGENTA);
+    printf ("1. ");
+    c_textcolor(DARKGRAY);
+    printf ("continue\n");
+    c_textcolor(LIGHTMAGENTA);
+    printf ("2. ");
+    c_textcolor(DARKGRAY);
+    printf ("New Play\n");
+    printf ("\n");
+    
+    c_textcolor(LIGHTCYAN);
+    printf ("choose: ");
+    
+    while (choice != 1 && choice != 2)
+    {
+        c_textcolor(LIGHTMAGENTA);
+        scanf ("%d", &choice);
+    }
+    
+    SUDOKU_initializePlayNumber ();
+    if (gameNumber == 1 && choice == 2)
+    {
+        //SUDOKU_initialize ();
+        //SUDOKU_original ();
+        gameNumber = 2;
+    }
+    else if (gameNumber == 2 && choice == 2)
+    {
+        gameNumber = 3;
+    }
+    else if (gameNumber == 3 && choice == 2)
+    {
+        gameNumber = 1;
+    }
+    SUDOKU_storePlayNumber ();
+
+    SUDOKU_initializeFixedElements ();
+    SUDOKU_initializeElements ();
+
+    SUDOKU_storeFixedElements ();
+    SUDOKU_storeElements ();
+    
     SUDOKU_play ();
+}
+
+void SUDOKU_storeElements ()
+{
+    FILE * fp;
+    if (gameNumber == 1)
+    {
+        fp = fopen ("SUDOKU_element1.txt", "w");
+    }
+    else if (gameNumber == 2)
+    {
+        fp = fopen ("SUDOKU_element2.txt", "w");
+    }
+    else if (gameNumber == 3)
+    {
+        fp = fopen ("SUDOKU_element3.txt", "w");
+    }
+
+    for (u32 square = 0; square < 9; square++)
+    {
+        for (u32 row = 0; row < 3; row++)
+        {
+            for (u32 column = 0; column < 3; column++)
+            {
+                fprintf(fp, "%d\n", SUDOKU_element[square][row][column]);
+            }
+        }
+    }
+    fclose(fp);
+}
+
+void SUDOKU_storeFixedElements ()
+{
+    FILE * fp;
+
+    if (gameNumber == 1)
+    {
+        fp = fopen ("SUDOKU_fixedElement1.txt", "w");
+    }
+    else if (gameNumber == 2)
+    {
+        fp = fopen ("SUDOKU_fixedElement2.txt", "w");
+    }
+    else if (gameNumber == 3)
+    {
+        fp = fopen ("SUDOKU_fixedElement3.txt", "w");
+    }
+
+    for (u32 square = 0; square < 9; square++)
+    {
+        for (u32 row = 0; row < 3; row++)
+        {
+            for (u32 column = 0; column < 3; column++)
+            {
+                fprintf(fp, "%d\n", SUDOKU_fixedElement[square][row][column]);
+            }
+        }
+    }
+    fclose(fp);
+}
+
+void SUDOKU_initializeElements ()
+{
+    FILE * fp;
+
+    if (gameNumber == 1)
+    {
+        if (choice == 1)
+            fp = fopen ("SUDOKU_element1.txt", "r");
+        else if (choice == 2)
+            fp = fopen ("SUDOKU_fixedElement1.txt", "r");
+    }
+    else if (gameNumber == 2)
+    {
+        if (choice == 1)
+            fp = fopen ("SUDOKU_element2.txt", "r");
+        else if (choice == 2)
+            fp = fopen ("SUDOKU_fixedElement2.txt", "r");
+    }
+    else if (gameNumber == 3)
+    {
+        if (choice == 1)
+            fp = fopen ("SUDOKU_element3.txt", "r");
+        else if (choice == 2)
+            fp = fopen ("SUDOKU_fixedElement3.txt", "r");
+    }
+    
+
+    for (u32 square = 0; square < 9; square++)
+    {
+        for (u32 row = 0; row < 3; row++)
+        {
+            for (u32 column = 0; column < 3; column++)
+            {
+                fscanf(fp, "%d\n", &SUDOKU_element[square][row][column]);
+            }
+        }
+    }
+    fclose(fp);
+}
+
+void SUDOKU_initializeFixedElements ()
+{
+    FILE * fp;
+    if (gameNumber == 1)
+    {
+        if (choice == 1)
+            fp = fopen ("SUDOKU_fixedElement1.txt", "r");
+        else if (choice == 2)
+            fp = fopen ("SUDOKU_fixedElement1.txt", "r");
+    }
+    else if (gameNumber == 2)
+    {
+        if (choice == 1)
+            fp = fopen ("SUDOKU_fixedElement2.txt", "r");
+        else if (choice == 2)
+            fp = fopen ("SUDOKU_fixedElement2.txt", "r");
+    }
+    else if (gameNumber == 3)
+    {
+        if (choice == 1)
+            fp = fopen ("SUDOKU_fixedElement3.txt", "r");
+        else if (choice == 2)
+            fp = fopen ("SUDOKU_fixedElement3.txt", "r");
+    }
+
+    for (u32 square = 0; square < 9; square++)
+    {
+        for (u32 row = 0; row < 3; row++)
+        {
+            for (u32 column = 0; column < 3; column++)
+            {
+                fscanf(fp, "%d\n", &SUDOKU_fixedElement[square][row][column]);
+            }
+        }
+    }
+    fclose(fp);
+}
+
+void SUDOKU_storePlayNumber ()
+{
+    FILE * fp;
+
+    fp = fopen ("playNumber.txt", "w");
+    
+    fprintf(fp, "%d", gameNumber);
+    
+    fclose(fp);
+}
+
+void SUDOKU_initializePlayNumber ()
+{
+    FILE * fp;
+
+    fp = fopen ("playNumber.txt", "r");
+   
+    fscanf(fp, "%d", &gameNumber);
+    
+    fclose(fp);
 }
