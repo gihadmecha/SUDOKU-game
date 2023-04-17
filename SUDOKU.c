@@ -265,18 +265,17 @@ coordinate SUDOKU_check ( coordinate desiredCoordinate, s32 number)
     {
         for (u32 column = 0; column < 3; column++)
         {
-            if (SUDOKU_element[desiredCoordinate.square][row][column] == number)
+            if (desiredCoordinate.row != row || desiredCoordinate.column != column)
             {
-                similarCoordinate.ack = 0;
-                similarCoordinate.square = desiredCoordinate.square;
-                similarCoordinate.row = row;
-                similarCoordinate.column = column;
+                if (SUDOKU_element[desiredCoordinate.square][row][column] == number)
+                {
+                    similarCoordinate.ack = 0;
+                    similarCoordinate.square = desiredCoordinate.square;
+                    similarCoordinate.row = row;
+                    similarCoordinate.column = column;
 
-                return similarCoordinate;
-            }
-            else
-            {
-                similarCoordinate.ack = 1;
+                    return similarCoordinate;
+                }
             }
         }
     }
@@ -288,18 +287,17 @@ coordinate SUDOKU_check ( coordinate desiredCoordinate, s32 number)
         {
             for (u32 column = 0; column < 3; column++)
             {
-                if (SUDOKU_element[square][desiredCoordinate.row][column] == number)
+                if (desiredCoordinate.square != square || desiredCoordinate.column != column)
                 {
-                    similarCoordinate.ack = 0;
-                    similarCoordinate.square = square;
-                    similarCoordinate.row = desiredCoordinate.row;
-                    similarCoordinate.column = column;
+                    if (SUDOKU_element[square][desiredCoordinate.row][column] == number)
+                    {
+                        similarCoordinate.ack = 0;
+                        similarCoordinate.square = square;
+                        similarCoordinate.row = desiredCoordinate.row;
+                        similarCoordinate.column = column;
 
-                    return similarCoordinate;
-                }
-                else
-                {
-                    similarCoordinate.ack = 1;
+                        return similarCoordinate;
+                    }
                 }
             }
         }
@@ -310,18 +308,17 @@ coordinate SUDOKU_check ( coordinate desiredCoordinate, s32 number)
         {
             for (u32 column = 0; column < 3; column++)
             {
-                if (SUDOKU_element[square][desiredCoordinate.row][column] == number)
+                if (desiredCoordinate.square != square || desiredCoordinate.column != column)
                 {
-                    similarCoordinate.ack = 0;
-                    similarCoordinate.square = square;
-                    similarCoordinate.row = desiredCoordinate.row;
-                    similarCoordinate.column = column;
+                    if (SUDOKU_element[square][desiredCoordinate.row][column] == number)
+                    {
+                        similarCoordinate.ack = 0;
+                        similarCoordinate.square = square;
+                        similarCoordinate.row = desiredCoordinate.row;
+                        similarCoordinate.column = column;
 
-                    return similarCoordinate;
-                }
-                else
-                {
-                    similarCoordinate.ack = 1;
+                        return similarCoordinate;
+                    }
                 }
             }
         }
@@ -332,18 +329,17 @@ coordinate SUDOKU_check ( coordinate desiredCoordinate, s32 number)
         {
             for (u32 column = 0; column < 3; column++)
             {
-                if (SUDOKU_element[square][desiredCoordinate.row][column] == number)
+                if (desiredCoordinate.square != square || desiredCoordinate.column != column)
                 {
-                    similarCoordinate.ack = 0;
-                    similarCoordinate.square = square;
-                    similarCoordinate.row = desiredCoordinate.row;
-                    similarCoordinate.column = column;
+                    if (SUDOKU_element[square][desiredCoordinate.row][column] == number)
+                    {
+                        similarCoordinate.ack = 0;
+                        similarCoordinate.square = square;
+                        similarCoordinate.row = desiredCoordinate.row;
+                        similarCoordinate.column = column;
 
-                    return similarCoordinate;
-                }
-                else
-                {
-                    similarCoordinate.ack = 1;
+                        return similarCoordinate;
+                    }
                 }
             }
         }
@@ -356,18 +352,17 @@ coordinate SUDOKU_check ( coordinate desiredCoordinate, s32 number)
         {
             for (u32 row = 0; row < 3; row++)
             {
-                if (SUDOKU_element[square][row][desiredCoordinate.column] == number)
+                if (desiredCoordinate.square != square || desiredCoordinate.row != row)
                 {
-                    similarCoordinate.ack = 0;
-                    similarCoordinate.square = square;
-                    similarCoordinate.row = row;
-                    similarCoordinate.column = desiredCoordinate.column;
+                    if (SUDOKU_element[square][row][desiredCoordinate.column] == number)
+                    {
+                        similarCoordinate.ack = 0;
+                        similarCoordinate.square = square;
+                        similarCoordinate.row = row;
+                        similarCoordinate.column = desiredCoordinate.column;
 
-                    return similarCoordinate;
-                }
-                else
-                {
-                    similarCoordinate.ack = 1;
+                        return similarCoordinate;
+                    }
                 }
             }
         }
@@ -378,18 +373,17 @@ coordinate SUDOKU_check ( coordinate desiredCoordinate, s32 number)
         {
             for (u32 row = 0; row < 3; row++)
             {
-                if (SUDOKU_element[square][row][desiredCoordinate.column] == number)
+                if (desiredCoordinate.square != square || desiredCoordinate.row != row)
                 {
-                    similarCoordinate.ack = 0;
-                    similarCoordinate.square = square;
-                    similarCoordinate.row = row;
-                    similarCoordinate.column = desiredCoordinate.column;
+                    if (SUDOKU_element[square][row][desiredCoordinate.column] == number)
+                    {
+                        similarCoordinate.ack = 0;
+                        similarCoordinate.square = square;
+                        similarCoordinate.row = row;
+                        similarCoordinate.column = desiredCoordinate.column;
 
-                    return similarCoordinate;
-                }
-                else
-                {
-                    similarCoordinate.ack = 1;
+                        return similarCoordinate;
+                    }
                 }
             }
         }
@@ -400,23 +394,23 @@ coordinate SUDOKU_check ( coordinate desiredCoordinate, s32 number)
         {
             for (u32 row = 0; row < 3; row++)
             {
-                if (SUDOKU_element[square][row][desiredCoordinate.column] == number)
+                if (desiredCoordinate.square != square || desiredCoordinate.row != row)
                 {
-                    similarCoordinate.ack = 0;
-                    similarCoordinate.square = square;
-                    similarCoordinate.row = row;
-                    similarCoordinate.column = desiredCoordinate.column;
+                    if (SUDOKU_element[square][row][desiredCoordinate.column] == number)
+                    {
+                        similarCoordinate.ack = 0;
+                        similarCoordinate.square = square;
+                        similarCoordinate.row = row;
+                        similarCoordinate.column = desiredCoordinate.column;
 
-                    return similarCoordinate;
-                }
-                else
-                {
-                    similarCoordinate.ack = 1;
+                        return similarCoordinate;
+                    }
                 }
             }
         }
     }
 
+    similarCoordinate.ack = 1;
     return similarCoordinate;  
 }
 
@@ -484,33 +478,34 @@ void SUDOKU_play ()
         }
     }
 
-    c_textcolor(LIGHTGREEN);
-    printf ("                               Congratulations                                  \n");
-    printf ("                             Your're The Winner !!                               \n");
+    c_textcolor(RED);
+    printf ("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                                                                    Congratulations                                  \n");
+    printf ("                                                                  Your're The Winner !!                               \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    c_textcolor (BLACK);
 }
 
 void SUDOKU ()
 {
-    c_textbackground(WHITE);
-    printf ("\n");
-    c_textcolor(LIGHTMAGENTA);
-    printf ("1. ");
-    c_textcolor(DARKGRAY);
-    printf ("continue\n");
-    c_textcolor(LIGHTMAGENTA);
-    printf ("2. ");
-    c_textcolor(DARKGRAY);
-    printf ("New Play\n");
-    printf ("\n");
     
-    c_textcolor(LIGHTCYAN);
-    printf ("choose: ");
     
     while (choice != 1 && choice != 2)
     {
+        c_textbackground(WHITE);
+        printf ("\n");
         c_textcolor(LIGHTMAGENTA);
-        scanf ("%d", &choice);
-    }
+        printf ("1. ");
+        c_textcolor(DARKGRAY);
+        printf ("continue\n");
+        c_textcolor(LIGHTMAGENTA);
+        printf ("2. ");
+        c_textcolor(DARKGRAY);
+        printf ("New Play\n");
+        printf ("\n");
+        c_textcolor(LIGHTCYAN);
+        printf ("choose: ");
+            c_textcolor(LIGHTMAGENTA);
+            scanf ("%d", &choice);
+        }
     
     SUDOKU_initializePlayNumber ();
     if (gameNumber == 1 && choice == 2)
