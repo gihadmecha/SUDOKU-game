@@ -9,6 +9,8 @@ static int sudokuPositionX;
 static int sudokuPositionY;
 static int messagePositionX;
 static int messagePositionY;
+static coordinate desiredCoordinate;
+static int wellDoneFlage = 0;
 
 void SUDOKU_initialize ()
 {
@@ -72,9 +74,11 @@ void SUDOKU_set ()
                 {
                     if (SUDOKU_fixedElement[squareIndex][rowIndex][columnIndex] != 0)
                         c_textcolor(BLACK);
+                    else if (wellDoneFlage == 1 && squareIndex == desiredCoordinate.square && rowIndex == desiredCoordinate.row && columnIndex == desiredCoordinate.column)
+                        c_textcolor(LIGHTGREEN);
                     else
                         c_textcolor(DARKGRAY);
-
+                    
                     printf ("%c", SUDOKU_element[squareIndex][rowIndex][columnIndex]+'0');
 
                 }
@@ -125,9 +129,11 @@ void SUDOKU_set ()
                 {
                     if (SUDOKU_fixedElement[squareIndex][rowIndex][columnIndex] != 0)
                         c_textcolor(BLACK);
+                    else if (wellDoneFlage == 1 && squareIndex == desiredCoordinate.square && rowIndex == desiredCoordinate.row && columnIndex == desiredCoordinate.column)
+                        c_textcolor(LIGHTGREEN);
                     else
                         c_textcolor(DARKGRAY);
-
+                    
                     printf ("%c", SUDOKU_element[squareIndex][rowIndex][columnIndex]+'0');
                 }
 
@@ -177,6 +183,8 @@ void SUDOKU_set ()
                 {
                     if (SUDOKU_fixedElement[squareIndex][rowIndex][columnIndex] != 0)
                         c_textcolor(BLACK);
+                    else if (wellDoneFlage == 1 && squareIndex == desiredCoordinate.square && rowIndex == desiredCoordinate.row && columnIndex == desiredCoordinate.column)
+                        c_textcolor(LIGHTGREEN);
                     else
                         c_textcolor(DARKGRAY);
 
@@ -214,29 +222,29 @@ coordinate SUDOKU_scanCoordinate ()
     coordinate coordinate;
     s32 square = -1, row = -1, column = -1; 
 
+    c_gotoxy (messagePositionX, messagePositionY+6);
+    c_textcolor(LIGHTCYAN);
+    printf ("Enter Square NO. from 1 to 9: \n");
+    printf ("Enter Row NO. from 1 to 3: \n");
+    printf ("Enter Column NO. from 1 to 3: \n");
+    printf ("Enter Number from 1 to 9: \n");
     while (square < 1 || row < 1 || column < 1)
     {
         while (square < 1 || square > 9 || row == 0 || column == 0)
         {
             row = -1, column = -1; 
 
-            SUDOKU_set ();
-            c_gotoxy (messagePositionX, messagePositionY+6);
-            printf ("                                                                         \n");
-            printf ("                                                                         \n");
-            printf ("                                                                         \n");
-            printf ("                                                                         \n");
-            c_gotoxy (messagePositionX, messagePositionY+6);
-            c_textcolor(LIGHTCYAN);
-            printf ("Enter Square NO. from 1 to 9: ");
+            
+            
+            c_gotoxy (messagePositionX+30, messagePositionY+6);
             c_textcolor(LIGHTMAGENTA);
             scanf ("%d", &square);
         }
 
         while ((row < 0 || row > 3) && square != 0)
         {
-            c_textcolor(LIGHTCYAN);
-            printf ("Enter Row NO. from 1 to 3: ");
+            
+            c_gotoxy (messagePositionX+28, messagePositionY+7);
             c_textcolor(LIGHTMAGENTA);
             scanf ("%d", &row);
         }
@@ -244,7 +252,8 @@ coordinate SUDOKU_scanCoordinate ()
         while ((column < 0 || column > 3 ) && row != 0 && square != 0)
         {
             c_textcolor(LIGHTCYAN);
-            printf ("Enter Column NO. from 1 to 3: ");
+            
+            c_gotoxy (messagePositionX+30, messagePositionY+8);
             c_textcolor(LIGHTMAGENTA);
             scanf ("%d", &column);
         }
@@ -261,11 +270,13 @@ coordinate SUDOKU_scanCoordinate ()
 s32 SUDOKU_scanNumber ()
 {
     s32 number = -1;
+    
+    
     while (number < 0 || number > 9)
     {
-        c_gotoxy (messagePositionX, messagePositionY+9);
-        c_textcolor(LIGHTCYAN);
-        printf ("Enter Number from 1 to 9: ");
+        
+        
+        c_gotoxy (messagePositionX+26, messagePositionY+9);
         c_textcolor(LIGHTMAGENTA);
         scanf ("%d", &number);
     }
@@ -455,9 +466,13 @@ void SUDOKU_play ()
 {
     while (SUDOKU_youAreTheWinner () == 0)
     {
-        //SUDOKU_set ();
+        s32 number;
+        coordinate similarCoordinate;
 
-        coordinate desiredCoordinate = SUDOKU_scanCoordinate ();
+        SUDOKU_set ();
+        wellDoneFlage = 0;
+
+        desiredCoordinate = SUDOKU_scanCoordinate ();
 
         c_gotoxy (messagePositionX, messagePositionY);
         printf ("                                                                            \n");
@@ -467,48 +482,59 @@ void SUDOKU_play ()
         printf ("                                                                            \n");
         c_gotoxy (messagePositionX, messagePositionY);
 
-        while (SUDOKU_fixedElement[desiredCoordinate.square][desiredCoordinate.row][desiredCoordinate.column] != 0)
+        if (SUDOKU_fixedElement[desiredCoordinate.square][desiredCoordinate.row][desiredCoordinate.column] != 0)
         {
             c_textcolor(RED);
             printf ("\n\n[%d, %d, %d] is not allowed space !!\n\n", desiredCoordinate.square+1, desiredCoordinate.row+1, desiredCoordinate.row+1);
             printf ("please, choose another allowed space !!\n\n");
-
-            desiredCoordinate = SUDOKU_scanCoordinate ();
-        }
-
-        s32 number = SUDOKU_scanNumber ();
-
-        coordinate similarCoordinate = SUDOKU_check (desiredCoordinate, number);
-
-        c_gotoxy (messagePositionX, messagePositionY);
-        printf ("                                                                            \n");
-        printf ("                                                                            \n");
-        printf ("                                                                            \n");
-        printf ("                                                                            \n");
-        printf ("                                                                            \n");
-        c_gotoxy (messagePositionX, messagePositionY);
-
-        if (number == 0)
-        {
-            SUDOKU_element[desiredCoordinate.square][desiredCoordinate.row][desiredCoordinate.column] = number;
-            SUDOKU_storeElements ();
-            c_textcolor(LIGHTRED);
-            printf ("\n\n[%d, %d, %d] deleted !!\n", desiredCoordinate.square+1, desiredCoordinate.row+1, desiredCoordinate.column+1);
-        }
-        else if (similarCoordinate.ack)
-        {
-            SUDOKU_element[desiredCoordinate.square][desiredCoordinate.row][desiredCoordinate.column] = number;
-            SUDOKU_storeElements ();
-            c_textcolor(LIGHTGREEN);
-            printf ("\n\nWell Done !!\n");
         }
         else
         {
-            c_textcolor(LIGHTRED);
-            printf ("\n\nyou can't put %d in [%d, %d, %d] !!\n", number, desiredCoordinate.square+1, desiredCoordinate.row+1, desiredCoordinate.column+1);
-            printf ("because %d is Exist at [%d, %d, %d] !!\n", number, similarCoordinate.square+1, similarCoordinate.row+1, similarCoordinate.column+1);
-            printf ("please, Try again !!\n");
+            number = SUDOKU_scanNumber ();
+        
+
+            similarCoordinate = SUDOKU_check (desiredCoordinate, number);
+
+            c_gotoxy (messagePositionX, messagePositionY);
+            printf ("                                                                            \n");
+            printf ("                                                                            \n");
+            printf ("                                                                            \n");
+            printf ("                                                                            \n");
+            printf ("                                                                            \n");
+            c_gotoxy (messagePositionX, messagePositionY);
+
+            if (number == 0)
+            {
+                SUDOKU_element[desiredCoordinate.square][desiredCoordinate.row][desiredCoordinate.column] = number;
+                SUDOKU_storeElements ();
+                c_textcolor(LIGHTRED);
+                printf ("\n\n[%d, %d, %d] deleted !!\n", desiredCoordinate.square+1, desiredCoordinate.row+1, desiredCoordinate.column+1);
+            }
+            else if (similarCoordinate.ack)
+            {
+                SUDOKU_element[desiredCoordinate.square][desiredCoordinate.row][desiredCoordinate.column] = number;
+                SUDOKU_storeElements ();
+                c_textcolor(LIGHTGREEN);
+                printf ("\n\nWell Done !!\n");
+                wellDoneFlage = 1;
+            }
+            else
+            {
+                c_textcolor(LIGHTRED);
+                printf ("\n\nyou can't put %d in [%d, %d, %d] !!\n", number, desiredCoordinate.square+1, desiredCoordinate.row+1, desiredCoordinate.column+1);
+                printf ("because %d is Exist at [%d, %d, %d] !!\n", number, similarCoordinate.square+1, similarCoordinate.row+1, similarCoordinate.column+1);
+                printf ("please, Try again !!\n");
+            }
         }
+
+        c_gotoxy (messagePositionX+30, messagePositionY+6);
+        printf (" ");
+        c_gotoxy (messagePositionX+28, messagePositionY+7);
+        printf (" ");
+        c_gotoxy (messagePositionX+30, messagePositionY+8);
+        printf (" ");
+        c_gotoxy (messagePositionX+26, messagePositionY+9);
+        printf (" ");
     }
 
     c_gotoxy (sudokuPositionX, sudokuPositionY);
@@ -574,7 +600,7 @@ void SUDOKU ()
         printf ("choose: ");
             c_textcolor(LIGHTMAGENTA);
             scanf ("%d", &choice);
-        }
+    }
     
     SUDOKU_initializePlayNumber ();
     if (gameNumber == 1 && choice == 2)
