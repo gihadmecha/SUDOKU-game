@@ -2,7 +2,7 @@
 
 It is a classic Sudoku game with a vibrant interface.
 
-https://github.com/gihadmecha/SUDOKU-game/assets/19871755/554d1d6f-e6a6-4897-ad02-31d8f1db5914
+![](https://gist.githubusercontent.com/gihadmecha/07276243e9d1171250b32606a81955d8/raw/92cbf2de1fbf1676885f4a62ce0b39c24a1cb2f0/SUDOKU.png)
 
 Demo: https://youtu.be/QXpI6K7ABAA?si=eDXQXgZRt-vgqyqA 
 
